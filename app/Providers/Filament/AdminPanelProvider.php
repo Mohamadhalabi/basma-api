@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->font('Cairo')
             ->brandLogo(asset('images/logo.webp'))
             ->brandLogoHeight('4rem')
+            ->favicon(asset('images/favicon.ico'))
             ->globalSearch(false)
             ->colors([
                'primary' => Color::hex('#0F7A3D'),
