@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('4rem')
             ->favicon(asset('images/favicon.ico'))
             ->globalSearch(false)
+            ->darkMode(false)
             ->colors([
                'primary' => Color::hex('#0F7A3D'),
             ])
