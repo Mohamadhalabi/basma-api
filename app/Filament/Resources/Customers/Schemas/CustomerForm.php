@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Customers\Schemas;
 
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -28,9 +29,7 @@ class CustomerForm
                     ->label('كلمة المرور')
                     ->password()
                     ->revealable()
-                    // Only required when creating a new customer
                     ->required(fn (string $operation) => $operation === 'create')
-                    // Hash only if a value was entered; otherwise keep the old one
                     ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
                     ->dehydrated(fn ($state) => filled($state)),
                 TextInput::make('company_name')
@@ -40,6 +39,13 @@ class CustomerForm
                 Toggle::make('is_active')
                     ->label('مفعّل')
                     ->default(true),
+                Select::make('priceLists')
+                    ->label('قائمة الأسعار الخاصة')
+                    ->relationship('priceLists', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->helperText('اختر قائمة الأسعار التي تُطبّق على هذا العميل في الطلبات')
+                    ->columnSpanFull(),
                 Repeater::make('addresses')
                     ->label('العناوين')
                     ->relationship('addresses')

@@ -47,6 +47,8 @@ class InvoiceController extends Controller
         $pdf->autoArabic = true;
         $pdf->autoLangToFont = true;
 
+        $pdf->getMpdf()->SetTitle($order->number);
+
         return $pdf->download($order->number . '.pdf');
     }
 }

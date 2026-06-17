@@ -53,11 +53,10 @@
             <table><tr>
                 <td style="width:90px;"><div class="logo-box">B</div></td>
                 <td>
-                    <div class="company-name">بصمة لخدمات الأقفال</div>
+                    <div class="company-name">بصمة </div>
                     <div class="muted">Basma Automotive Locksmith</div>
-                    <div class="muted">الرياض، المملكة العربية السعودية</div>
+                    <div class="muted">جدّه, المملكة العربية السعودية</div>
                     <div class="muted">هاتف: 05XXXXXXXX</div>
-                    <div class="muted">الرقم الضريبي: 3000000000</div>
                 </td>
             </tr></table>
         </td>
@@ -160,7 +159,7 @@
 @endif
 
 <div class="footer">
-    شكراً لتعاملكم معنا — بصمة لخدمات الأقفال
+    شكراً لتعاملكم معنا
 </div>
 
 </body>
