@@ -117,8 +117,7 @@
                             </div>
                         </td>
                         <td class="ob-cell-price" data-label="السعر" style="padding:8px;">
-                            <template x-if="it.custom"><input type="number" min="0" step="0.01" x-model.number="it.priceSar" class="ob-input" style="width:110px; height:32px;"></template>
-                            <span x-show="!it.custom" x-text="money(it.priceHalalas)"></span>
+                            <input type="number" min="0" step="0.01" x-model.number="it.priceSar" class="ob-input" style="width:110px; height:32px;">
                         </td>
                         <td class="ob-cell-qty" data-label="الكمية" style="padding:8px; text-align:center;">
                             <input type="number" min="1" step="1" x-model.number="it.qty" class="ob-input" style="width:75px; height:36px; text-align:center;">
@@ -218,7 +217,6 @@
             display:flex !important; justify-content:space-between; align-items:center;
             padding:6px 0 !important; text-align:right !important; border-top:1px solid #f0f0f0;
         }
-        /* label each value using the data-label attribute */
         .ob-cell-price::before, .ob-cell-qty::before, .ob-cell-total::before{
             content: attr(data-label); color:#888; font-size:13px; font-weight:normal;
         }
@@ -260,6 +258,8 @@
                 this.serviceFees = this.edit.serviceFees;
                 this.notes = this.edit.notes || '';
                 this.items = this.edit.items || [];
+                // Ensure every loaded item has an editable priceSar
+                this.items.forEach(it => { if (it.priceSar === undefined || it.priceSar === 0) { if (it.priceHalalas !== undefined && it.priceHalalas > 0) it.priceSar = it.priceHalalas/100; } });
                 this.uidc = this.items.length + 1000;
             }
         },
@@ -286,20 +286,22 @@
             if(pl && pl[id]!=null) return pl[id];
             const p=this.products.find(c=>c.id===id); return p?p.def:0;
         },
-        reprice(){ this.items.forEach(it=>{ if(!it.custom) it.priceHalalas=this.price(it.cid); }); },
+        // When customer changes, reset catalog item prices to that customer's price (in SAR)
+        reprice(){ this.items.forEach(it=>{ if(!it.custom) it.priceSar=this.price(it.cid)/100; }); },
 
         addProduct(id){
             const ex=this.items.find(i=>!i.custom && i.cid===id);
             if(ex){ ex.qty++; }
             else {
                 const p=this.products.find(c=>c.id===id);
-                this.items.push({uid:this.uidc++, cid:id, sku:p.sku, custom:false, title:p.title, thumb:p.thumb, note:'', priceHalalas:this.price(id), qty:1});
+                this.items.push({uid:this.uidc++, cid:id, sku:p.sku, custom:false, title:p.title, thumb:p.thumb, note:'', priceSar:this.price(id)/100, qty:1});
             }
             this.search='';
             this.showResults=false;
         },
         addCustom(){ this.items.push({uid:this.uidc++, custom:true, sku:'CUSTOM', title:'', thumb:null, note:'', priceSar:0, qty:1}); },
-        lineTotal(it){ const unit = it.custom ? Math.round((it.priceSar||0)*100) : it.priceHalalas; return unit*(it.qty||0); },
+        // All items now use priceSar (in SAR), converted to halalas here
+        lineTotal(it){ const unit = Math.round((it.priceSar||0)*100); return unit*(it.qty||0); },
         subtotal(){ return this.items.reduce((s,it)=>s+this.lineTotal(it),0); },
         discountAmount(){
             const v=parseFloat(this.discountValue)||0;

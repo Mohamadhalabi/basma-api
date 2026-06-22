@@ -119,9 +119,7 @@ class CreateOrderBuilder extends Page
                 $lines = [];
                 foreach ($items as $it) {
                     $qty  = max(1, (int) ($it['qty'] ?? 1));
-                    $unit = !empty($it['custom'])
-                        ? (int) round(((float) ($it['priceSar'] ?? 0)) * 100)
-                        : (int) ($it['priceHalalas'] ?? 0);
+                    $unit = (int) round(((float) ($it['priceSar'] ?? 0)) * 100);
                     $lineTotal = $unit * $qty;
                     $subtotal += $lineTotal;
                     $lines[] = [
